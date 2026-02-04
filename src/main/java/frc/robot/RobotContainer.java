@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.OperatorConstants;
 import static frc.robot.Constants.FuelConstants;
 import frc.robot.subsystems.CANDriveSubsystem;
+import frc.robot.subsystems.CANFuelSubsystem;
 
 public class RobotContainer {
   // The robot's subsystems
@@ -20,12 +21,10 @@ public class RobotContainer {
   private final CANFuelSubsystem ballSubsystem = new CANFuelSubsystem();
 
   // The driver's controller
-  private final CommandXboxController driverController = new CommandXboxController(
-      DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController driverController = new CommandXboxController(Constants.OperatorConstants.DRIVER_CONTROLLER_PORT);
 
   // The operator's controller
-  private final CommandXboxController operatorController = new CommandXboxController(
-      OPERATOR_CONTROLLER_PORT);
+  private final CommandXboxController operatorController = new CommandXboxController(Constants.OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
   // The autonomous chooser
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -67,8 +66,8 @@ public class RobotContainer {
     
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
-            () -> driverController.getLeftY() * DRIVE_SCALING,
-            () -> -driverController.getRightX() * ROTATION_SCALING));
+            () -> driverController.getLeftY() * Constants.OperatorConstants.DRIVE_SCALING,
+            () -> -driverController.getRightX() * Constants.OperatorConstants.ROTATION_SCALING));
   }
 
   /**

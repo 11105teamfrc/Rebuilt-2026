@@ -19,17 +19,14 @@ public final class Constants {
   public static final class FuelConstants {
 
     // CAN IDs  
-
-    public static final int MAIN_ROLLER_ID = 1; // intake + launch
-    public static final int FEEDER_ROLLER_ID = 5; // feeder + outtake 
+    public static final int MAIN_ROLLER_ID = 4; // intake + launch
+    public static final int FEEDER_ROLLER_ID = 2; // feeder + outtake 
 
     // Current Limits (A)
-
-    public static final double INTAKE_MAIN_VOLTAGE = 60;
-    public static final double INTAKE_FEEDER_VOLTAGE = 60;
+    public static final double INTAKE_MAIN_MAX_AMPER = 40.0;
+    public static final double INTAKE_FEEDER_MAX_AMPER = 40.0;
 
     // Voltages (V)
-
     public static final double INTAKE_MAIN_VOLTAGE  = -12;
     public static final double INTAKE_FEEDER_VOLTAGE = 10;
 
