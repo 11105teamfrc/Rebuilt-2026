@@ -15,6 +15,7 @@ import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
 
 public class RobotContainer {
+  
   // The robot's subsystems
 
   private final CANDriveSubsystem driveSubsystem = new CANDriveSubsystem();
@@ -41,29 +42,32 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    // While the left bumper on operator controller is held, intake Fuel
+    // Operator Controller 
     
-    // operatorController.leftBumper()
-    //    .whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.intake(), () -> ballSubsystem.stop()));
-    // While the right bumper on the operator controller is held, spin up for 1
-    // second, then launch fuel. When the button is released, stop.
-    // operatorController.rightBumper()
-     //   .whileTrue(ballSubsystem.spinUpCommand().withTimeout(SPIN_UP_SECONDS)
-     //       .andThen(ballSubsystem.launchCommand())
-     //       .finallyDo(() -> ballSubsystem.stop()));
-    // While the A button is held on the operator controller, eject fuel back out
-    // the intake
-    // operatorController.a()
-      //  .whileTrue(ballSubsystem.runEnd(() -> ballSubsystem.eject(), () -> ballSubsystem.stop()));
+    // LEFTBUMPER RUN INTAKE
 
-    // Set the default command for the drive subsystem to the command provided by
-    // factory with the values provided by the joystick axes on the driver
-    // controller. The Y axis of the controller is inverted so that pushing the
-    // stick away from you (a negative value) drives the robot forwards (a positive
-    // value). The X-axis is also inverted so a positive value (stick to the right)
-    // results in clockwise rotation (front of the robot turning right). Both axes
-    // are also scaled down so the rotation is more easily controllable.
+    operatorController.leftTrigger()
+      .whileTrue(
+        ballSubsystem.runEnd(
+          ballSubsystem::intake,
+          ballSubsystem::stop));
+
+    // RIGHTBUMPER RUN LAUNCH (SHOOTER)
+    operatorController.rightTrigger()
+      .whileTrue(
+        ballSubsystem.runEnd(
+          ballSubsystem::launch,
+          ballSubsystem::stop));
+
+    // A RUN OUTTAKE (EJETAR POR BAIXO)      
+    operatorController.a()
+      .whileTrue(
+        ballSubsystem.runEnd(
+          ballSubsystem::outtake,
+          ballSubsystem::stop));
     
+      // Driver Controller
+  
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
             () -> driverController.getLeftY() * Constants.OperatorConstants.DRIVE_SCALING,
