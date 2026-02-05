@@ -36,14 +36,14 @@ public final class Constants {
     public static final double CURRENT_LIMIT = 40.0;
 
     // Voltages (VELOCIDADE)
-    public static final double INTAKE_MAIN_VOLTAGE  = 6.0;
-    public static final double INTAKE_FEEDER_VOLTAGE = 5.0;
+    public static final double INTAKE_MAIN_VOLTAGE  = -6.0;
+    public static final double INTAKE_FEEDER_VOLTAGE = -5.0;
 
-    public static final double LAUNCH_MAIN_VOLTAGE = 10.6;
-    public static final double LAUNCH_FEEDER_VOLTAGE = 8.0;
+    public static final double LAUNCH_MAIN_VOLTAGE = -10.6;
+    public static final double LAUNCH_FEEDER_VOLTAGE = -8.0;
 
-    public static final double OUTTAKE_MAIN_VOLTAGE = -5.0;
-    public static final double OUTTAKE_FEEDER_VOLTAGE = -5.0;
+    public static final double OUTTAKE_MAIN_VOLTAGE = 5.0;
+    public static final double OUTTAKE_FEEDER_VOLTAGE = 5.0;
     
    }
 

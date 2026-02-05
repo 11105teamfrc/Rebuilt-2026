@@ -51,6 +51,7 @@ public class CANDriveSubsystem extends SubsystemBase {
 
     // set up differential drive class
     drive = new DifferentialDrive(leftLeader, rightLeader);
+    drive.setDeadband(0.02);
  
     // set timeout
     leftLeader.setCANTimeout(250);
@@ -73,9 +74,9 @@ public class CANDriveSubsystem extends SubsystemBase {
     config.disableFollowerMode();
     rightLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    // Left side inverted (Inverter)
-    config.inverted(true);
-    leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // Inversão de motores DriveTrain
+    leftLeader.setInverted(false);
+    rightLeader.setInverted(true);
 
     // ENCODER
 
@@ -121,6 +122,6 @@ public class CANDriveSubsystem extends SubsystemBase {
   // Command factory to create command to drive the robot with joystick inputs.
   public Command driveArcade(DoubleSupplier xSpeed, DoubleSupplier zRotation) {
     return this.run(
-        () -> drive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble()));
+        () -> drive.arcadeDrive(xSpeed.getAsDouble(), -zRotation.getAsDouble()));
   }
 }
