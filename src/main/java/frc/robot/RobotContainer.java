@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.AutoBasico;
+import frc.robot.commands.Auto;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
 
@@ -28,12 +28,14 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   public RobotContainer() {
+
     configureBindings();
 
     autoChooser.setDefaultOption(
-      "AutoBasico - Andar",
-      new AutoBasico(driveSubsystem)
+      "Auto - Andar",
+      new Auto(driveSubsystem, ballSubsystem)
     );
+
   }
 
 
