@@ -36,6 +36,15 @@ public class CANFuelSubsystem extends SubsystemBase {
     feederRoller.setVoltage(Constants.FuelConstants.OUTTAKE_FEEDER_VOLTAGE);
   }
 
+  public void startLaunchOnly() {
+    mainRoller.setVoltage(Constants.FuelConstants.LAUNCH_MAIN_VOLTAGE);
+    feederRoller.stopMotor();
+  }
+
+  public void startFeederOnly() {
+    feederRoller.setVoltage(Constants.FuelConstants.LAUNCH_FEEDER_VOLTAGE);
+  }
+
   public void stop() {
     mainRoller.stopMotor();
     feederRoller.stopMotor();
