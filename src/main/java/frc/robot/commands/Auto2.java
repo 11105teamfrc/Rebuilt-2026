@@ -10,7 +10,7 @@ import frc.robot.subsystems.CANFuelSubsystem;
 
 public class Auto2 extends SequentialCommandGroup {
 
-    private static final double kAutoDriveSpeed = 0.3;
+    private static final double kAutoDriveSpeed = 0.6;
     private static final double kAutoDriveDistanceMeters = 1.5;
 
     public Auto2(CANDriveSubsystem drive, CANFuelSubsystem fuel) {
@@ -36,6 +36,7 @@ public class Auto2 extends SequentialCommandGroup {
 
 
         addCommands(
+            
             runDriveTrainCommand.withTimeout(2.0),
             new WaitCommand(0.3), 
             launchCommand.withTimeout(1.0)
