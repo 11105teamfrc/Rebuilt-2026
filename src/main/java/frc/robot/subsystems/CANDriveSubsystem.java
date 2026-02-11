@@ -4,17 +4,16 @@
 
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.DriveConstants.DISTANCE_PER_PULSE;
 import static frc.robot.Constants.DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT;
-import static frc.robot.Constants.DriveConstants.LEFT_FOLLOWER_ID;
-import static frc.robot.Constants.DriveConstants.LEFT_LEADER_ID;
-import static frc.robot.Constants.DriveConstants.RIGHT_FOLLOWER_ID;
-import static frc.robot.Constants.DriveConstants.RIGHT_LEADER_ID;
-
 import static frc.robot.Constants.DriveConstants.LEFT_ENCODER_CHANNEL_A;
 import static frc.robot.Constants.DriveConstants.LEFT_ENCODER_CHANNEL_B;
+import static frc.robot.Constants.DriveConstants.LEFT_FOLLOWER_ID;
+import static frc.robot.Constants.DriveConstants.LEFT_LEADER_ID;
 import static frc.robot.Constants.DriveConstants.RIGHT_ENCODER_CHANNEL_A;
 import static frc.robot.Constants.DriveConstants.RIGHT_ENCODER_CHANNEL_B;
-import static frc.robot.Constants.DriveConstants.DISTANCE_PER_PULSE;
+import static frc.robot.Constants.DriveConstants.RIGHT_FOLLOWER_ID;
+import static frc.robot.Constants.DriveConstants.RIGHT_LEADER_ID;
 
 import java.util.function.DoubleSupplier;
 
@@ -110,12 +109,17 @@ public class CANDriveSubsystem extends SubsystemBase {
   }
 
   // Encoder (AUTO)
+
+  public void arcadeDrive(double xSpeed, double zRotation) {
+    drive.arcadeDrive(xSpeed, zRotation);
+}
+
   public void resetEncoders() {
      leftEncoder.reset();
      rightEncoder.reset();
   }
 
-  public double getAvarageDistanceMeters() {
+  public double getAverageDistanceMeters() {
     return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
   }
 

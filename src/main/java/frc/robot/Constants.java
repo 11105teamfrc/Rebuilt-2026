@@ -1,8 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.Auto;
-
 public final class Constants {
 
   public static final class DriveConstants {
@@ -25,7 +22,8 @@ public final class Constants {
 
     // Encoders LIMIT PER PULSE
 
-    public static final int DISTANCE_PER_PULSE = 1;
+    public static final double DISTANCE_PER_PULSE =
+    (2 * Math.PI * 0.0762) / 600.0;
     
   }
 
@@ -39,11 +37,11 @@ public final class Constants {
     public static final double CURRENT_LIMIT = 40.0;
 
     // Voltages (VELOCIDADE)
-    public static final double INTAKE_MAIN_VOLTAGE  = -6.0;
-    public static final double INTAKE_FEEDER_VOLTAGE = -5.0;
+    public static final double INTAKE_MAIN_VOLTAGE  = -8.0;
+    public static final double INTAKE_FEEDER_VOLTAGE = -8.0;
 
-    public static final double LAUNCH_MAIN_VOLTAGE = -10.6;
-    public static final double LAUNCH_FEEDER_VOLTAGE = -8.0;
+    public static final double LAUNCH_MAIN_VOLTAGE = -10.0;
+    public static final double LAUNCH_FEEDER_VOLTAGE = 8.0;
 
     public static final double OUTTAKE_MAIN_VOLTAGE = 5.0;
     public static final double OUTTAKE_FEEDER_VOLTAGE = 5.0;

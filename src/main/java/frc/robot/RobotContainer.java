@@ -5,9 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Auto;
+import frc.robot.commands.Auto2;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
 
@@ -33,9 +34,9 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption(
       "Auto - Andar",
-      new Auto(driveSubsystem, ballSubsystem)
+      new Auto2(driveSubsystem, ballSubsystem)
     );
-
+      SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
 
@@ -45,18 +46,18 @@ public class RobotContainer {
     
     // LEFTBUMPER RUN INTAKE
 
-    operatorController.leftTrigger()
+    operatorController.leftBumper()
       .whileTrue(
         ballSubsystem.runEnd(
           ballSubsystem::intake,
           ballSubsystem::stop));
 
     // RIGHTBUMPER RUN LAUNCH (SHOOTER)
-    operatorController.rightTrigger()
-      .whileTrue(
-        ballSubsystem.runEnd(
-          ballSubsystem::launch,
-          ballSubsystem::stop));
+    operatorController.rightBumper()
+      .whileTrue(ballSubsystem.run(ballSubsystem::gabriela)
+      .withTimeout(1)
+      .andThen(ballSubsystem.run(ballSubsystem::launch))
+      .finallyDo(ballSubsystem::stop));
 
     // A RUN OUTTAKE (EJETAR POR BAIXO)      
     operatorController.a()
