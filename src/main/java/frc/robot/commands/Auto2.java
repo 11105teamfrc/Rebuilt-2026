@@ -10,36 +10,43 @@ import frc.robot.subsystems.CANFuelSubsystem;
 
 public class Auto2 extends SequentialCommandGroup {
 
-    private static final double kAutoDriveSpeed = 0.6;
+    private static final double kAutoDriveSpeed = -0.6;
     private static final double kAutoDriveDistanceMeters = 1.5;
 
     public Auto2(CANDriveSubsystem drive, CANFuelSubsystem fuel) {
 
         Command runDriveTrainCommand = new FunctionalCommand(
-        drive::resetEncoders,
+                drive::resetEncoders,
 
-        () -> drive.arcadeDrive(kAutoDriveSpeed, 0),
-        
-        (interrupt) -> drive.arcadeDrive (0, 0),
+                () -> drive.arcadeDrive(kAutoDriveSpeed, 0),
 
-        () -> drive.getAverageDistanceMeters() >= kAutoDriveDistanceMeters,
+                (interrupt) -> drive.arcadeDrive(0, 0),
 
-        drive
+                () -> drive.getAverageDistanceMeters() >= kAutoDriveDistanceMeters,
+
+                drive
 
         );
 
-          Command launchCommand = Commands.startEnd(
-            fuel::launch,   
-            fuel::stop,    
-            fuel
-         );
+        Command launchCommand = Commands.startEnd(
+                fuel::launch,
+                fuel::stop,
+                fuel);
 
-
+        Command initShooterCommand = Commands.startEnd(
+            fuel::gabriela,
+            fuel::stop,
+            fuel);
+        
         addCommands(
-            
-            runDriveTrainCommand.withTimeout(2.0),
-            new WaitCommand(0.3), 
-            launchCommand.withTimeout(1.0)
+
+
+
+
+                runDriveTrainCommand.withTimeout(2.0), // seg. andando
+                new WaitCommand(0.3),
+                initShooterCommand.withTimeout(1.0),
+                launchCommand
 
         );
     }
