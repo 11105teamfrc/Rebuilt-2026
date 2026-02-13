@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CANDriveSubsystem extends SubsystemBase {
+
   private final SparkMax leftLeader;
   private final SparkMax leftFollower;
   private final SparkMax rightLeader;
@@ -42,17 +43,29 @@ public class CANDriveSubsystem extends SubsystemBase {
 
   public CANDriveSubsystem() {
     
-    // create brushed motors for drive
-    leftLeader = new SparkMax(LEFT_LEADER_ID, MotorType.kBrushed);
-    leftFollower = new SparkMax(LEFT_FOLLOWER_ID, MotorType.kBrushed);
-    rightLeader = new SparkMax(RIGHT_LEADER_ID, MotorType.kBrushed);
-    rightFollower = new SparkMax(RIGHT_FOLLOWER_ID, MotorType.kBrushed);
+    // Create/ Set brushed motors for drive
 
-    // set up differential drive class
+    leftLeader = new SparkMax(
+      LEFT_LEADER_ID, MotorType.kBrushed
+    );
+
+    leftFollower = new SparkMax(
+      LEFT_FOLLOWER_ID, MotorType.kBrushed
+    );
+
+    rightLeader = new SparkMax(
+      RIGHT_LEADER_ID, MotorType.kBrushed
+    );
+
+    rightFollower = new SparkMax(
+      RIGHT_FOLLOWER_ID, MotorType.kBrushed
+    );
+
+    // Set up differential drive class
     drive = new DifferentialDrive(leftLeader, rightLeader);
     drive.setDeadband(0.02);
  
-    // set timeout
+    // Set timeout
     leftLeader.setCANTimeout(250);
     rightLeader.setCANTimeout(250);
     leftFollower.setCANTimeout(250);
@@ -66,6 +79,7 @@ public class CANDriveSubsystem extends SubsystemBase {
     // Seguidores (Followers)
     config.follow(leftLeader);
     leftFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
     config.follow(rightLeader);
     rightFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -92,11 +106,11 @@ public class CANDriveSubsystem extends SubsystemBase {
     leftEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
     rightEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-    // Inverter encoders (Fisico)
+    // Inverter Encoders (Fisico)
     leftEncoder.setReverseDirection(false);
     rightEncoder.setReverseDirection(true);
 
-     
+
     leftEncoder.reset();
     rightEncoder.reset();
 
@@ -108,12 +122,6 @@ public class CANDriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Encoder (m)", rightEncoder.getDistance());
   }
 
-  // Encoder (AUTO)
-
-  public void arcadeDrive(double xSpeed, double zRotation) {
-    drive.arcadeDrive(xSpeed, zRotation);
-}
-
   public void resetEncoders() {
      leftEncoder.reset();
      rightEncoder.reset();
@@ -123,7 +131,10 @@ public class CANDriveSubsystem extends SubsystemBase {
     return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
   }
 
-  // Command factory to create command to drive the robot with joystick inputs.
+  public void arcadeDrive(double xSpeed, double zRotation) {
+    drive.arcadeDrive(xSpeed, zRotation);
+}
+
   public Command driveArcade(DoubleSupplier xSpeed, DoubleSupplier zRotation) {
     return this.run(
         () -> drive.arcadeDrive(xSpeed.getAsDouble(), -zRotation.getAsDouble()));

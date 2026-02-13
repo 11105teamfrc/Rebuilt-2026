@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalSource;
+
 public final class Constants {
 
   public static final class DriveConstants {
@@ -31,7 +33,7 @@ public final class Constants {
 
     // CAN IDs  
     public static final int MAIN_ROLLER_ID = 4; // intake + launch
-    public static final int FEEDER_ROLLER_ID = 2; // feeder + outtake 
+    public static final int FEEDER_ROLLER_ID = 2; // feeder + outtake - VictorSP
 
     // Current Limits (A)
     public static final double CURRENT_LIMIT = 40.0;
@@ -55,5 +57,19 @@ public final class Constants {
 
     public static final double DRIVE_SCALING = .7;
     public static final double ROTATION_SCALING = .8;
+  }
+
+  public static final class ShooterConstants {
+
+    public static final double kSVolts = 0;
+    public static final double kVVoltSecondsPerRotation = 0;
+
+    public static final double kP = 0;
+
+    public static final double kShooterToleranceRPS = 0;
+    public static final double kEncoderDistancePerPulse = 0;
+
+    public static int[] kEncoderPorts = {0, 1};
+    public static final boolean kEncoderReversed = false;
   }
 }

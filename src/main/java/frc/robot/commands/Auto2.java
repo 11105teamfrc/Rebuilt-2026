@@ -18,9 +18,9 @@ public class Auto2 extends SequentialCommandGroup {
         Command runDriveTrainCommand = new FunctionalCommand(
                 drive::resetEncoders,
 
-                () -> drive.arcadeDrive(kAutoDriveSpeed, 0),
+                () -> drive.driveArcade(() -> kAutoDriveSpeed, () -> 0),
 
-                (interrupt) -> drive.arcadeDrive(0, 0),
+                (interrupt) -> drive.driveArcade(() -> 0, () -> 0),
 
                 () -> drive.getAverageDistanceMeters() >= kAutoDriveDistanceMeters,
 
