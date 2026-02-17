@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import static frc.robot.Constants.ShooterConstants.*;
 
 
@@ -38,9 +37,9 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   private final Encoder m_shooterEncoder =
     new Encoder(
-      kEncoderPorts[0],
-      kEncoderPorts[1],
-      kEncoderReversed);
+      ENCODER_CHANNEL_A,
+      ENCODER_CHANNEL_B
+    );
 
 
   public CANFuelSubsystem() {
@@ -89,7 +88,7 @@ public class CANFuelSubsystem extends SubsystemBase {
     feederRoller.stopMotor();
   }
 
-  public void gabriela() {
+  public void shoot() {
     mainRoller.setVoltage(LAUNCH_MAIN_VOLTAGE);
   }
 

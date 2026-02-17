@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DigitalSource;
-
 public final class Constants {
 
   public static final class DriveConstants {
@@ -13,7 +11,7 @@ public final class Constants {
     public static final int RIGHT_LEADER_ID = 6;
     public static final int RIGHT_FOLLOWER_ID = 1;
 
-    public static final int DRIVE_MOTOR_CURRENT_LIMIT = 60;
+    public static final int DRIVE_MOTOR_CURRENT_LIMIT = 40;
 
     // Encoders (CANAL)
     public static final int LEFT_ENCODER_CHANNEL_A = 0;
@@ -69,7 +67,10 @@ public final class Constants {
     public static final double kShooterToleranceRPS = 0;
     public static final double kEncoderDistancePerPulse = 0;
 
-    public static int[] kEncoderPorts = {0, 1};
+    public static final int ENCODER_CHANNEL_A = 4; // int = inteiro
+    public static final int ENCODER_CHANNEL_B = 5; // double = numero com ponto
+
+    public static int[] kEncoderPorts = {2, 3};
     public static final boolean kEncoderReversed = false;
   }
 }

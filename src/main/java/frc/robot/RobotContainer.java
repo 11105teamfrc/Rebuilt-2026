@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,7 +11,6 @@ import frc.robot.subsystems.CANFuelSubsystem;
 public class RobotContainer {
   
   // The robot's subsystems
-
   private final CANDriveSubsystem driveSubsystem = new CANDriveSubsystem();
   private final CANFuelSubsystem ballSubsystem = new CANFuelSubsystem();
 
@@ -45,7 +40,6 @@ public class RobotContainer {
     // Operator Controller 
     
     // LEFTBUMPER RUN INTAKE
-
     operatorController.leftBumper()
       .whileTrue(
         ballSubsystem.runEnd(
@@ -54,7 +48,7 @@ public class RobotContainer {
 
     // RIGHTBUMPER RUN LAUNCH (SHOOTER)
     operatorController.rightBumper()
-      .whileTrue(ballSubsystem.run(ballSubsystem::gabriela)
+      .whileTrue(ballSubsystem.run(ballSubsystem::shoot)
       .withTimeout(1)
       .andThen(ballSubsystem.run(ballSubsystem::launch))
       .finallyDo(ballSubsystem::stop));
@@ -67,19 +61,13 @@ public class RobotContainer {
           ballSubsystem::stop));
 
 
-      // Driver Controller
-  
+    // Driver Controller
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
             () -> driverController.getLeftY() * Constants.OperatorConstants.DRIVE_SCALING,
             () -> -driverController.getRightX() * Constants.OperatorConstants.ROTATION_SCALING));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
     
     return autoChooser.getSelected();

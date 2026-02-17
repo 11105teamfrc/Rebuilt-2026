@@ -34,7 +34,7 @@ public class Auto2 extends SequentialCommandGroup {
                 fuel);
 
         Command initShooterCommand = Commands.startEnd(
-            fuel::gabriela,
+            fuel::shoot,
             fuel::stop,
             fuel);
         
