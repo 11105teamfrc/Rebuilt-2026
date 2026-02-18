@@ -27,6 +27,8 @@ public class RobotContainer {
 
     configureBindings();
 
+    ballSubsystem.periodic();
+
     autoChooser.setDefaultOption(
       "Auto - Andar",
       new Auto2(driveSubsystem, ballSubsystem)

@@ -22,50 +22,46 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ShooterConstants.*;
 
-
 public class CANFuelSubsystem extends SubsystemBase {
 
   private final SparkMax mainRoller;
   private final VictorSP feederRoller;
 
-  private final SimpleMotorFeedforward m_shooterFeedforward =
-      new SimpleMotorFeedforward(
-          kSVolts, kVVoltSecondsPerRotation);
+  private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(
+      kSVolts, kVVoltSecondsPerRotation);
 
-  private final PIDController m_shooterFeedback =
-   new PIDController(kP, 0.0, 0.0);
+  private final PIDController m_shooterFeedback = new PIDController(kP, 0.0, 0.0);
 
-  private final Encoder m_shooterEncoder =
-    new Encoder(
+  private final Encoder m_shooterEncoder = new Encoder(
       ENCODER_CHANNEL_A,
-      ENCODER_CHANNEL_B
-    );
-
+      ENCODER_CHANNEL_B);
 
   public CANFuelSubsystem() {
 
-    mainRoller = 
-      new SparkMax(MAIN_ROLLER_ID, MotorType.kBrushed);
-    feederRoller = 
-      new VictorSP(FEEDER_ROLLER_ID);
+    mainRoller = new SparkMax(MAIN_ROLLER_ID, MotorType.kBrushed);
+    feederRoller = new VictorSP(FEEDER_ROLLER_ID);
 
-  m_shooterFeedback.setTolerance(kShooterToleranceRPS);
-  m_shooterEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
+    feederRoller.setInverted(true);
 
-}
+    m_shooterFeedback.setTolerance(kShooterToleranceRPS);
+    m_shooterEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
+
+    m_shooterEncoder.reset();
+  
+
+  }
 
   public Command shootCommand(double setpointRotationsPerSecond) {
     return Commands.parallel(
-      run(() -> {
-        mainRoller.set(
-          m_shooterFeedforward.calculate(setpointRotationsPerSecond)
-            + m_shooterFeedback.calculate(
-                m_shooterEncoder.getRate(), setpointRotationsPerSecond));
-    }),
+        run(() -> {
+          mainRoller.set(
+              m_shooterFeedforward.calculate(setpointRotationsPerSecond)
+                  + m_shooterFeedback.calculate(
+                      m_shooterEncoder.getRate(), setpointRotationsPerSecond));
+        }),
 
-    Commands.waitUntil(m_shooterFeedback::atSetpoint)
-    .andThen(() -> feederRoller.set(1))
-    );
+        Commands.waitUntil(m_shooterFeedback::atSetpoint)
+            .andThen(() -> feederRoller.set(1)));
   }
 
   public void intake() {
@@ -92,13 +88,13 @@ public class CANFuelSubsystem extends SubsystemBase {
     mainRoller.setVoltage(LAUNCH_MAIN_VOLTAGE);
   }
 
-  public void setFeederRoller () {
-  feederRoller.set(LAUNCH_FEEDER_VOLTAGE);
+  public void setFeederRoller() {
+    feederRoller.set(LAUNCH_FEEDER_VOLTAGE);
   }
-   
-  @Override
-  public void periodic (){
-    SmartDashboard.putString("Fuel State", "INTAKE / LAUNCH / OUTTAKE");
+
+  public void periodic() {
+    SmartDashboard.putBoolean("Is enconder connected", m_shooterEncoder.getStopped());
+    SmartDashboard.putNumber("Fuel State (m)", m_shooterEncoder.getDistance());
   }
 
 }

@@ -31,20 +31,20 @@ public final class Constants {
 
     // CAN IDs  
     public static final int MAIN_ROLLER_ID = 4; // intake + launch
-    public static final int FEEDER_ROLLER_ID = 2; // feeder + outtake - VictorSP
+    public static final int FEEDER_ROLLER_ID = 0; // feeder + outtake - VictorSP
 
     // Current Limits (A)
     public static final double CURRENT_LIMIT = 40.0;
 
     // Voltages (VELOCIDADE)
-    public static final double INTAKE_MAIN_VOLTAGE  = -8.0;
-    public static final double INTAKE_FEEDER_VOLTAGE = -8.0;
+    public static final double INTAKE_MAIN_VOLTAGE  = -12.0;
+    public static final double INTAKE_FEEDER_VOLTAGE = -10.0;
 
-    public static final double LAUNCH_MAIN_VOLTAGE = -10.0;
-    public static final double LAUNCH_FEEDER_VOLTAGE = 8.0;
+    public static final double LAUNCH_MAIN_VOLTAGE = -9.0;
+    public static final double LAUNCH_FEEDER_VOLTAGE = 10.6;
 
-    public static final double OUTTAKE_MAIN_VOLTAGE = 5.0;
-    public static final double OUTTAKE_FEEDER_VOLTAGE = 5.0;
+    public static final double OUTTAKE_MAIN_VOLTAGE = 6.0;
+    public static final double OUTTAKE_FEEDER_VOLTAGE = 1.0;
     
    }
 
@@ -65,7 +65,7 @@ public final class Constants {
     public static final double kP = 0;
 
     public static final double kShooterToleranceRPS = 0;
-    public static final double kEncoderDistancePerPulse = 0;
+    public static final double kEncoderDistancePerPulse = 1;
 
     public static final int ENCODER_CHANNEL_A = 4; // int = inteiro
     public static final int ENCODER_CHANNEL_B = 5; // double = numero com ponto
