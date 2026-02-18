@@ -70,6 +70,8 @@ public class CANFuelSubsystem extends SubsystemBase {
 
     m_shooterEncoder.reset();
 
+    // TEST PID + SysId
+
     m_sysIdRoutine = new SysIdRoutine(
         // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
         new SysIdRoutine.Config(),
@@ -107,6 +109,8 @@ public class CANFuelSubsystem extends SubsystemBase {
         Commands.waitUntil(m_shooterFeedback::atSetpoint)
             .andThen(() -> feederRoller.set(1)));
   }
+
+  // SysId Config
 
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.quasistatic(direction);

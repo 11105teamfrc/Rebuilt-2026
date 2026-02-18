@@ -75,7 +75,7 @@ public class RobotContainer {
             () -> driverController.getLeftY() * Constants.OperatorConstants.DRIVE_SCALING,
             () -> -driverController.getRightX() * Constants.OperatorConstants.ROTATION_SCALING));
 
-    // TESTE PID
+    // TESTE PID bindings controller
 
     driverController.a()
     .whileTrue(ballSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
