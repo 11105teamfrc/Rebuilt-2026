@@ -1,7 +1,7 @@
 package frc.robot;
 
 public final class Constants {
-
+  
   public static final class DriveConstants {
 
     // Motor controller IDs for drivetrain motors
@@ -59,18 +59,23 @@ public final class Constants {
 
   public static final class ShooterConstants {
 
-    public static final double kSVolts = 0;
-    public static final double kVVoltSecondsPerRotation = 0;
+    public static final double kSVolts = 0.05;
+    public static final double kVVoltSecondsPerRotation = 12.0 / 88.5;
 
-    public static final double kP = 0;
+    public static final double kP = 0.1;
 
-    public static final double kShooterToleranceRPS = 0;
-    public static final double kEncoderDistancePerPulse = 1;
+    public static final double kShooterToleranceRPS = 50;
+    public static final double kEncoderDistancePerPulse = 1.0 / 600.0;
 
     public static final int ENCODER_CHANNEL_A = 4; // int = inteiro
     public static final int ENCODER_CHANNEL_B = 5; // double = numero com ponto
 
     public static int[] kEncoderPorts = {2, 3};
     public static final boolean kEncoderReversed = false;
+
+    // teste
+    public static double kForward = 5.0;
+    public static double kReverse = -5.0;
+
   }
 }

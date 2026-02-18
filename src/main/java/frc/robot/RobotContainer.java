@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.Auto2;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.CANFuelSubsystem;
@@ -55,6 +56,11 @@ public class RobotContainer {
       .andThen(ballSubsystem.run(ballSubsystem::launch))
       .finallyDo(ballSubsystem::stop));
 
+    // SUBSTITUTO SHOOT
+
+    operatorController.x()
+     .whileTrue(ballSubsystem.shootCommand(500));
+
     // A RUN OUTTAKE (EJETAR POR BAIXO)      
     operatorController.a()
       .whileTrue(
@@ -68,6 +74,21 @@ public class RobotContainer {
         driveSubsystem.driveArcade(
             () -> driverController.getLeftY() * Constants.OperatorConstants.DRIVE_SCALING,
             () -> -driverController.getRightX() * Constants.OperatorConstants.ROTATION_SCALING));
+
+    // TESTE PID
+
+    driverController.a()
+    .whileTrue(ballSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+
+    driverController.b()
+    .whileTrue(ballSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+    driverController.x()
+    .whileTrue(ballSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+
+    driverController.y()
+    .whileTrue(ballSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+  
   }
 
   public Command getAutonomousCommand() {

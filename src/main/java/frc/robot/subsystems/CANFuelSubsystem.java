@@ -14,12 +14,23 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 import static frc.robot.Constants.ShooterConstants.*;
 
 public class CANFuelSubsystem extends SubsystemBase {
@@ -36,6 +47,17 @@ public class CANFuelSubsystem extends SubsystemBase {
       ENCODER_CHANNEL_A,
       ENCODER_CHANNEL_B);
 
+  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+  // Mutable holder for unit-safe linear distance values, persisted to avoid
+  // reallocation.
+  private final MutAngle m_angle = Radians.mutable(0);
+  // Mutable holder for unit-safe linear velocity values, persisted to avoid
+  // reallocation.
+  private final MutAngularVelocity m_velocity = RadiansPerSecond.mutable(0);
+
+  private final SysIdRoutine m_sysIdRoutine;
+
   public CANFuelSubsystem() {
 
     mainRoller = new SparkMax(MAIN_ROLLER_ID, MotorType.kBrushed);
@@ -47,8 +69,30 @@ public class CANFuelSubsystem extends SubsystemBase {
     m_shooterEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
 
     m_shooterEncoder.reset();
-  
 
+    m_sysIdRoutine = new SysIdRoutine(
+        // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+        new SysIdRoutine.Config(),
+        new SysIdRoutine.Mechanism(
+            // Tell SysId how to plumb the driving voltage to the motor(s).
+            mainRoller::setVoltage,
+            // Tell SysId how to record a frame of data for each motor on the mechanism
+            // being
+            // characterized.
+            log -> {
+              // Record a frame for the shooter motor.
+              log.motor("shooter-wheel")
+                  .voltage(
+                      m_appliedVoltage.mut_replace(
+                          mainRoller.get() * RobotController.getBatteryVoltage(), Volts))
+                  .angularPosition(m_angle.mut_replace(m_shooterEncoder.getDistance(), Rotations))
+                  .angularVelocity(
+                      m_velocity.mut_replace(m_shooterEncoder.getRate(), RotationsPerSecond));
+            },
+            // Tell SysId to make generated commands require this subsystem, suffix test
+            // state in
+            // WPILog with this subsystem's name ("shooter")
+            this));
   }
 
   public Command shootCommand(double setpointRotationsPerSecond) {
@@ -62,6 +106,14 @@ public class CANFuelSubsystem extends SubsystemBase {
 
         Commands.waitUntil(m_shooterFeedback::atSetpoint)
             .andThen(() -> feederRoller.set(1)));
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
   }
 
   public void intake() {
