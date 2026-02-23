@@ -56,38 +56,26 @@ public class RobotContainer {
     // LeftBumper gira Intake
     operatorController.leftBumper()
       .whileTrue(ballSubsystem.run(ballSubsystem::intake))
-      .whileFalse(ballSubsystem.run(ballSubsystem::stop));
+      .onFalse(ballSubsystem.run(ballSubsystem::stop));
 
     // RightBumper gira apenas o Shooter
-    /* operatorController.rightBumper()
-      .whileTrue(ballSubsystem.shootCommand(40));
-    */
+     operatorController.rightBumper()
+      .whileTrue(ballSubsystem.shootCommand(40))
+      .onFalse(ballSubsystem.run(ballSubsystem::stop));
 
     // X gira apenas o feeder 
     operatorController.x()
       .whileTrue(ballSubsystem.run(ballSubsystem::buffer))
       .onFalse(ballSubsystem.run(ballSubsystem::stop));
 
-    // Eixo esquerdo gira apenas shooter
-    ballSubsystem.setDefaultCommand(
-      ballSubsystem.shoot(
-        () -> operatorController.getLeftY()
-      )
-    );
-
     // A RUN OUTTAKE (EJETAR POR BAIXO)      
     operatorController.a()
-      .whileTrue(ballSubsystem.run(ballSubsystem::outtake));
+      .whileTrue(ballSubsystem.run(ballSubsystem::outtake))
+      .whileFalse(ballSubsystem.run(ballSubsystem::stop));
 
-    // SHOOT withTimeout with PID
+    // TEST for PID bindings controller //
 
-  // operatorController.rightBumper()
-  //  .whileTrue(ballSubsystem.shootCommand(40))
-  //  .onFalse(ballSubsystem.run(ballSubsystem::stop));
-
-    // TESTE PID bindings controller //
-
-    // TESTE SYSID 
+    // TEST SYSID 
 
     /* driverController.a()
     .whileTrue(ballSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));

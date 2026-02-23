@@ -83,7 +83,7 @@ public class CANFuelSubsystem extends SubsystemBase {
     m_shooterEncoder.reset();
   
 
-    // TEST PID + SysId
+    // TEST SysId
 
     m_sysIdRoutine = new SysIdRoutine(
         // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
@@ -110,6 +110,7 @@ public class CANFuelSubsystem extends SubsystemBase {
             this));
   }
 
+  // Test Command Shoot with PID
   public Command shootCommand(double setPointRotationsPerSecond) {
     return Commands.parallel(
         run(() -> {
@@ -137,7 +138,7 @@ public class CANFuelSubsystem extends SubsystemBase {
     return m_sysIdRoutine.dynamic(direction);
   }
 
-  //
+  // Métodos
 
   public void intake() {
     mainRoller.setVoltage(INTAKE_MAIN_VOLTAGE);
@@ -163,16 +164,12 @@ public class CANFuelSubsystem extends SubsystemBase {
     feederRoller.stopMotor();
   }
 
-  public void resetEncoder() {
-    m_shooterEncoder.reset();
-  }
-
   public void shoot() {
     mainRoller.setVoltage(LAUNCH_MAIN_VOLTAGE);
   }
 
-  public void FeederRoller() {
-    feederRoller.set(LAUNCH_FEEDER_VOLTAGE);
+  public void resetEncoder() {
+    m_shooterEncoder.reset();
   }
 
   public void periodic() {
