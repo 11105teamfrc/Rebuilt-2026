@@ -10,6 +10,9 @@ import static frc.robot.Constants.FuelConstants.OUTTAKE_FEEDER_VOLTAGE;
 import static frc.robot.Constants.FuelConstants.OUTTAKE_MAIN_VOLTAGE;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -33,6 +36,8 @@ import static edu.wpi.first.units.Units.Volts;
 
 import static frc.robot.Constants.ShooterConstants.*;
 
+import java.util.function.DoubleSupplier;
+
 public class CANFuelSubsystem extends SubsystemBase {
 
   private final SparkMax mainRoller;
@@ -45,7 +50,10 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   private final Encoder m_shooterEncoder = new Encoder(
       ENCODER_CHANNEL_A,
-      ENCODER_CHANNEL_B);
+      ENCODER_CHANNEL_B,true
+      
+
+      );
 
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
   private final MutVoltage m_appliedVoltage = Volts.mutable(0);
@@ -60,15 +68,20 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   public CANFuelSubsystem() {
 
-    mainRoller = new SparkMax(MAIN_ROLLER_ID, MotorType.kBrushed);
-    feederRoller = new VictorSP(FEEDER_ROLLER_ID);
+    var config = new SparkMaxConfig();
+    config.inverted(true);
 
+    mainRoller = new SparkMax(MAIN_ROLLER_ID, MotorType.kBrushed);
+    mainRoller.configure(config, ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    feederRoller = new VictorSP(FEEDER_ROLLER_ID);
+    
     feederRoller.setInverted(true);
 
     m_shooterFeedback.setTolerance(kShooterToleranceRPS);
     m_shooterEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
 
     m_shooterEncoder.reset();
+  
 
     // TEST PID + SysId
 
@@ -86,7 +99,7 @@ public class CANFuelSubsystem extends SubsystemBase {
               log.motor("shooter-wheel")
                   .voltage(
                       m_appliedVoltage.mut_replace(
-                          mainRoller.get() * RobotController.getBatteryVoltage(), Volts))
+                          mainRoller.getAppliedOutput() * RobotController.getBatteryVoltage(), Volts))
                   .angularPosition(m_angle.mut_replace(m_shooterEncoder.getDistance(), Rotations))
                   .angularVelocity(
                       m_velocity.mut_replace(m_shooterEncoder.getRate(), RotationsPerSecond));
@@ -97,17 +110,21 @@ public class CANFuelSubsystem extends SubsystemBase {
             this));
   }
 
-  public Command shootCommand(double setpointRotationsPerSecond) {
+  public Command shootCommand(double setPointRotationsPerSecond) {
     return Commands.parallel(
         run(() -> {
-          mainRoller.set(
-              m_shooterFeedforward.calculate(setpointRotationsPerSecond)
+          mainRoller.setVoltage(
+              m_shooterFeedforward.calculate(setPointRotationsPerSecond)
                   + m_shooterFeedback.calculate(
-                      m_shooterEncoder.getRate(), setpointRotationsPerSecond));
+                      m_shooterEncoder.getRate(), setPointRotationsPerSecond));
         }),
 
         Commands.waitUntil(m_shooterFeedback::atSetpoint)
-            .andThen(() -> feederRoller.set(1)));
+            .andThen(() -> {
+              feederRoller.setVoltage(7);
+
+              // m_shooterEncoder.reset();
+              }));
   }
 
   // SysId Config
@@ -120,9 +137,15 @@ public class CANFuelSubsystem extends SubsystemBase {
     return m_sysIdRoutine.dynamic(direction);
   }
 
+  //
+
   public void intake() {
     mainRoller.setVoltage(INTAKE_MAIN_VOLTAGE);
     feederRoller.setVoltage(INTAKE_FEEDER_VOLTAGE);
+  }
+
+  public void buffer() {
+    feederRoller.setVoltage(LAUNCH_FEEDER_VOLTAGE);
   }
 
   public void launch() {
@@ -140,17 +163,33 @@ public class CANFuelSubsystem extends SubsystemBase {
     feederRoller.stopMotor();
   }
 
+  public void resetEncoder() {
+    m_shooterEncoder.reset();
+  }
+
   public void shoot() {
     mainRoller.setVoltage(LAUNCH_MAIN_VOLTAGE);
   }
 
-  public void setFeederRoller() {
+  public void FeederRoller() {
     feederRoller.set(LAUNCH_FEEDER_VOLTAGE);
   }
 
   public void periodic() {
     SmartDashboard.putBoolean("Is enconder connected", m_shooterEncoder.getStopped());
     SmartDashboard.putNumber("Fuel State (m)", m_shooterEncoder.getDistance());
+
+    SmartDashboard.putBoolean("Is set point", m_shooterFeedback.atSetpoint());
+
   }
 
+  public Command shoot(DoubleSupplier xSpeed) {
+  
+    SmartDashboard.putNumber("Velocity", xSpeed.getAsDouble());
+
+    return this.run(
+        () -> mainRoller.set(xSpeed.getAsDouble())); 
+
+  
+  }
 }

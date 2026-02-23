@@ -40,55 +40,68 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    // Operator Controller 
-    
-    // LEFTBUMPER RUN INTAKE
-    operatorController.leftBumper()
-      .whileTrue(
-        ballSubsystem.runEnd(
-          ballSubsystem::intake,
-          ballSubsystem::stop));
-
-    // RIGHTBUMPER RUN LAUNCH (SHOOTER)
-    operatorController.rightBumper()
-      .whileTrue(ballSubsystem.run(ballSubsystem::shoot)
-      .withTimeout(1)
-      .andThen(ballSubsystem.run(ballSubsystem::launch))
-      .finallyDo(ballSubsystem::stop));
-
-    // SUBSTITUTO SHOOT
-
-    operatorController.x()
-     .whileTrue(ballSubsystem.shootCommand(500));
-
-    // A RUN OUTTAKE (EJETAR POR BAIXO)      
-    operatorController.a()
-      .whileTrue(
-        ballSubsystem.runEnd(
-          ballSubsystem::outtake,
-          ballSubsystem::stop));
-
-
     // Driver Controller
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
             () -> driverController.getLeftY() * Constants.OperatorConstants.DRIVE_SCALING,
             () -> -driverController.getRightX() * Constants.OperatorConstants.ROTATION_SCALING));
 
-    // TESTE PID bindings controller
+    // Zerar encoder em LB
+    driverController.leftBumper()
+    .onTrue(ballSubsystem.run(ballSubsystem::resetEncoder));
 
-    driverController.a()
+
+    // Operator Controller 
+    
+    // LeftBumper gira Intake
+    operatorController.leftBumper()
+      .whileTrue(ballSubsystem.run(ballSubsystem::intake))
+      .whileFalse(ballSubsystem.run(ballSubsystem::stop));
+
+    // RightBumper gira apenas o Shooter
+    /* operatorController.rightBumper()
+      .whileTrue(ballSubsystem.shootCommand(40));
+    */
+
+    // X gira apenas o feeder 
+    operatorController.x()
+      .whileTrue(ballSubsystem.run(ballSubsystem::buffer))
+      .onFalse(ballSubsystem.run(ballSubsystem::stop));
+
+    // Eixo esquerdo gira apenas shooter
+    ballSubsystem.setDefaultCommand(
+      ballSubsystem.shoot(
+        () -> operatorController.getLeftY()
+      )
+    );
+
+    // A RUN OUTTAKE (EJETAR POR BAIXO)      
+    operatorController.a()
+      .whileTrue(ballSubsystem.run(ballSubsystem::outtake));
+
+    // SHOOT withTimeout with PID
+
+  // operatorController.rightBumper()
+  //  .whileTrue(ballSubsystem.shootCommand(40))
+  //  .onFalse(ballSubsystem.run(ballSubsystem::stop));
+
+    // TESTE PID bindings controller //
+
+    // TESTE SYSID 
+
+    /* driverController.a()
     .whileTrue(ballSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 
-    driverController.b()
+     driverController.b()
     .whileTrue(ballSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-    driverController.x()
+     driverController.x()
     .whileTrue(ballSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
 
     driverController.y()
     .whileTrue(ballSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-  
+   /* */
+
   }
 
   public Command getAutonomousCommand() {

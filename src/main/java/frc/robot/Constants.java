@@ -37,7 +37,7 @@ public final class Constants {
     public static final double CURRENT_LIMIT = 40.0;
 
     // Voltages (VELOCIDADE)
-    public static final double INTAKE_MAIN_VOLTAGE  = -12.0;
+    public static final double INTAKE_MAIN_VOLTAGE  = -6.0;
     public static final double INTAKE_FEEDER_VOLTAGE = -10.0;
 
     public static final double LAUNCH_MAIN_VOLTAGE = -9.0;
@@ -59,12 +59,12 @@ public final class Constants {
 
   public static final class ShooterConstants {
 
-    public static final double kSVolts = 0.05;
-    public static final double kVVoltSecondsPerRotation = 12.0 / 88.5;
+    public static final double kSVolts = 0.95581; // KS
+    public static final double kVVoltSecondsPerRotation = 0.14214; // KV
 
-    public static final double kP = 0.1;
+    public static final double kP = 1.29638; // KP
 
-    public static final double kShooterToleranceRPS = 50;
+    public static final double kShooterToleranceRPS = 5;
     public static final double kEncoderDistancePerPulse = 1.0 / 600.0;
 
     public static final int ENCODER_CHANNEL_A = 4; // int = inteiro
