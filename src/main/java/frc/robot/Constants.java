@@ -78,4 +78,11 @@ public final class Constants {
     public static double kReverse = -5.0;
 
   }
+  public static final class ClimberConstants {
+  public static final int CLIMBER_ROLLER_ID = 3; // ID FICTÍCIO
+  public static final double RAMP_RATE = 0.4;
+  public static final double CLIMB_UP_SPEED = 0.6;
+  public static final double CLIMB_DOWN_SPEED = 0.4;
+  
+    }
 }
