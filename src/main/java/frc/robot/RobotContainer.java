@@ -75,6 +75,13 @@ public class RobotContainer {
       .whileTrue(ballSubsystem.run(ballSubsystem::outtake))
       .whileFalse(ballSubsystem.run(ballSubsystem::stop));
 
+    // Climb UP 
+    climberSubsystem.setDefaultCommand(
+      climberSubsystem.climbUp(
+        () -> operatorController.getLeftY()
+    )
+  );
+
     // TEST for PID bindings controller //
 
     // TEST SYSID 
