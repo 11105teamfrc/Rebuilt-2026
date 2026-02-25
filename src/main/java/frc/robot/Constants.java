@@ -81,7 +81,7 @@ public final class Constants {
 
   public static final class ClimberConstants {
 
-    public static final int CLIMBER_ROLLER_ID = 3; // ID FICTÍCIO
+    public static final int CLIMBER_ROLLER_ID = 2; // ID FICTÍCIO
 
     // Forças ficticias
     public static final double RAMP_RATE = 0.2;
