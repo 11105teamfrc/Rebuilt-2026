@@ -70,7 +70,6 @@ public class CANDriveSubsystem extends SubsystemBase {
     // Config Break (Motor)
     SparkMaxConfig config = new SparkMaxConfig();
     config.voltageCompensation(12);
-    config.smartCurrentLimit(DRIVE_MOTOR_CURRENT_LIMIT);
 
     // Seguidores (Followers)
     config.follow(leftLeader);
