@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.FuelConstants.FEEDER_ROLLER_ID;
 import static frc.robot.Constants.FuelConstants.INTAKE_FEEDER_VOLTAGE;
 import static frc.robot.Constants.FuelConstants.INTAKE_MAIN_VOLTAGE;
@@ -9,40 +12,28 @@ import static frc.robot.Constants.FuelConstants.MAIN_ROLLER_ID;
 import static frc.robot.Constants.FuelConstants.OUTTAKE_FEEDER_VOLTAGE;
 import static frc.robot.Constants.FuelConstants.OUTTAKE_MAIN_VOLTAGE;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Volts;
-
-import static frc.robot.Constants.ShooterConstants.*;
-
-import java.util.function.DoubleSupplier;
 
 public class CANFuelSubsystem extends SubsystemBase {
 
   private final SparkMax mainRoller;
   private final VictorSP feederRoller;
 
+  /* 
   private final SimpleMotorFeedforward m_shooterFeedforward = new SimpleMotorFeedforward(
       kSVolts, kVVoltSecondsPerRotation);
 
@@ -51,9 +42,9 @@ public class CANFuelSubsystem extends SubsystemBase {
   private final Encoder m_shooterEncoder = new Encoder(
       ENCODER_CHANNEL_A,
       ENCODER_CHANNEL_B,true
-      
+  /* */
 
-      );
+
 
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
   private final MutVoltage m_appliedVoltage = Volts.mutable(0);
@@ -64,7 +55,7 @@ public class CANFuelSubsystem extends SubsystemBase {
   // reallocation.
   private final MutAngularVelocity m_velocity = RadiansPerSecond.mutable(0);
 
-  private final SysIdRoutine m_sysIdRoutine;
+  //private final SysIdRoutine m_sysIdRoutine;
 
   public CANFuelSubsystem() {
 
@@ -76,14 +67,9 @@ public class CANFuelSubsystem extends SubsystemBase {
     feederRoller = new VictorSP(FEEDER_ROLLER_ID);
     
     feederRoller.setInverted(true);
+  }
 
-    m_shooterFeedback.setTolerance(kShooterToleranceRPS);
-    m_shooterEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
-
-    m_shooterEncoder.reset();
-  
-
-    // TEST SysId
+   /* // TEST SysId
 
     m_sysIdRoutine = new SysIdRoutine(
         // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
@@ -130,13 +116,14 @@ public class CANFuelSubsystem extends SubsystemBase {
 
   // SysId Config
 
+
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.quasistatic(direction);
   }
 
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
-  }
+  }*/
 
   // Métodos
 
@@ -168,25 +155,30 @@ public class CANFuelSubsystem extends SubsystemBase {
     mainRoller.setVoltage(LAUNCH_MAIN_VOLTAGE);
   }
 
-  public void resetEncoder() {
-    m_shooterEncoder.reset();
+   public void periodic() {
+
   }
 
-  public void periodic() {
-    SmartDashboard.putBoolean("Is enconder connected", m_shooterEncoder.getStopped());
-    SmartDashboard.putNumber("Fuel State (m)", m_shooterEncoder.getDistance());
+  public Command launchCommand(DoubleSupplier xSpeed) {
+    return this.run(() -> launch());
+  }
 
-    SmartDashboard.putBoolean("Is set point", m_shooterFeedback.atSetpoint());
+  public void feederRollback(){
+    feederRoller.set(-1);
 
+  }
+
+  public void feederSlowRollback(){
+    feederRoller.set(-0.7);
   }
 
   public Command shoot(DoubleSupplier xSpeed) {
-  
     SmartDashboard.putNumber("Velocity", xSpeed.getAsDouble());
-
     return this.run(
         () -> mainRoller.set(xSpeed.getAsDouble())); 
 
   
   }
 }
+
+

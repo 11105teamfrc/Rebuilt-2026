@@ -125,8 +125,8 @@ public class CANDriveSubsystem extends SubsystemBase {
   public double getAverageDistanceMeters() {
     return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
   }
-
   public void arcadeDrive(double xSpeed, double zRotation) {
+
     drive.arcadeDrive(xSpeed, zRotation);
 }
 
